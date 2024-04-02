@@ -1,0 +1,13 @@
+@import './base.css';
+
+:root {
+  --color-key-border: #282828;
+  --color-key-white: #f8f8f8;
+  --color-key-black: #222222;
+  --color-key-white-hover: #bbbbbb;
+  --color-key-black-hover: #333333;
+  --color-key-white-pressed: #aaaaaa;
+  --color-key-black-pressed: #444444;
+  --key-width: 2.5rem;
+  --key-height: 8rem;
+}
