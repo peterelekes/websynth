@@ -1,11 +1,47 @@
 <script setup>
 import keyMap from "@/util/keyMap.js";
+import computerKeyboardMap from "@/util/computerKeyboardMap.js";
+import {ref, onMounted, onBeforeUnmount , watch} from "vue";
+import emitter from "@/mitt.js";
+
+const pressedKeys = ref([]);
+
+function handleKeyDown(event) {
+  const key = computerKeyboardMap.get(event.key);
+  if (key && !pressedKeys.value.includes(key)) {
+    pressedKeys.value.push(key);
+    emitter.emit("playNote", key);
+  }
+}
+function handleKeyUp(event) {
+  const key = computerKeyboardMap.get(event.key);
+  if (key) {
+    pressedKeys.value = pressedKeys.value.filter((k) => k !== key);
+    emitter.emit("releaseNote", key);
+  }
+}
+
+onMounted(() => {
+  window.addEventListener("keydown", handleKeyDown);
+  window.addEventListener("keyup", handleKeyUp);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("keydown", handleKeyDown);
+  window.removeEventListener("keyup", handleKeyUp);
+});
 </script>
 
 <template>
   <div class="keyboard">
     <!-- Render white keys -->
-    <div v-for="key in keyMap" :key="key.note" class="key" :class="{ white: key.white, black: !key.white }">
+    <div v-for="key in keyMap"
+         :key="key.note"
+         class="key"
+         :class="{ white: key.white, black: !key.white, active: pressedKeys.includes(key.note) }"
+         @mousedown="emitter.emit('playNote', key.note); pressedKeys.push(key.note)"
+        @mouseup="emitter.emit('releaseNote', key.note); pressedKeys = pressedKeys.filter((k) => k !== key.note)"
+    >
       {{ key.name }}
     </div>
   </div>
@@ -34,7 +70,7 @@ import keyMap from "@/util/keyMap.js";
 .white:hover {
   background-color: var(--color-key-white-hover);
 }
-.white:active {
+.white.active {
   background-color: var(--color-key-white-pressed);
 }
 
@@ -50,26 +86,23 @@ import keyMap from "@/util/keyMap.js";
 .black:hover {
   background-color: var(--color-key-black-hover);
 }
-.black:active {
+.black.active {
   background-color: var(--color-key-black-pressed);
 }
-
-.key:active {
-  animation: keyPress 0.2s ease-in;
-}
-
 @keyframes keyPress {
   0% {
-    transform: translateY(0);
-    scale: 1;
+    transform: scale(1) translateY(0);
   }
   50% {
-    transform: translateY(1px);
-    scale: 1.02;
+    transform: scale(1.02) translateY(1px);
   }
   100% {
-    transform: translateY(0);
-    scale: 1;
+    transform: scale(1) translateY(0);
   }
 }
+.active {
+  animation: keyPress 0.2s linear;
+}
+
+
 </style>

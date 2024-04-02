@@ -1,10 +1,11 @@
 <script setup>
 import Control from "@/components/Control.vue";
 import Keyboard from "@/components/Keyboard.vue";
+import Oscillator from "@/components/CustomOscillator.vue";
 </script>
 
 <template>
- <Control />
+  <Control />
   <Keyboard />
 </template>
 
