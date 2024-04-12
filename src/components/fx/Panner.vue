@@ -36,9 +36,9 @@ watch(frequency, (value) => {
   <div class="panner">
     <h2>Panner</h2>
     <label>Enabled: <input v-model="enabled" type="checkbox"></label>
-    <label>Deviation: <input v-model="deviation" type="range" min="-1" max="1" step="0.1"></label>
+    <label>Deviation: <input v-model="deviation" type="range" min="0" max="1" step="0.1"></label>
     {{ deviation }}
-    <label>Frequency: <input v-model="frequency" type="range" min="0" max="1000" step="10"></label>
+    <label>Frequency: <input v-model="frequency" type="range" min="0" max="1" step="0.1"></label>
     {{ frequency }}
   </div>
 
