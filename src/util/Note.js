@@ -4,6 +4,7 @@ export class Note {
     decay;
     sustain;
     release;
+    filters;
     oscillators = [];
     velocity;
     constructor(audioContext, noteProperties, velocity) {
@@ -13,13 +14,28 @@ export class Note {
         this.sustain = noteProperties.sustain;
         this.release = noteProperties.release;
         this.velocity = velocity;
+        this.filters = noteProperties.filters;
         this.gainNode = this.audioContext.createGain();
+        if( this.filters.length === 0 ) {
+            this.gainNode.connect(this.audioContext.destination);
+        }
+        this.filters.forEach(filter => {
+            this.gainNode.connect(filter);
+            filter.connect(this.audioContext.destination);
+        });
         this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
         this.gainNode.gain
             .linearRampToValueAtTime(this.velocity, this.audioContext.currentTime + this.attack);
         this.gainNode.gain
             .setTargetAtTime(this.sustain * this.velocity, this.audioContext.currentTime + this.attack, this.decay);
-        this.gainNode.connect(audioContext.destination);
+        if(noteProperties.panner) {
+            let panner = this.audioContext.createStereoPanner();
+            //it should cycle between deviation and -deviation every frequency seconds
+            panner.pan.setTargetAtTime(-noteProperties.panner.deviation, this.audioContext.currentTime, noteProperties.panner.frequency);
+            panner.pan.setTargetAtTime(noteProperties.panner.deviation, this.audioContext.currentTime + noteProperties.panner.frequency / 2, noteProperties.panner.frequency);
+            this.gainNode.connect(panner);
+            panner.connect(this.audioContext.destination);
+        }
     }
     releaseNote() {
         this.oscillators.forEach(oscillator => {
@@ -32,5 +48,6 @@ export class Note {
             this.audioContext.currentTime + this.release
         );
     }
+
 }
 export default Note;

@@ -2,10 +2,18 @@
 import Keyboard from "@/components/Keyboard.vue";
 import OscillatorConrol from "@/components/OscillatorConrol.vue";
 import MainControl from "@/components/MainControl.vue";
+import {ref} from "vue";
+
+let audioContext = ref(null);
+
+window.addEventListener("click", async () => {
+  audioContext.value = new AudioContext();
+});
+
 </script>
 
 <template>
-  <MainControl />
+  <MainControl v-if="audioContext" :audioContext="audioContext" />
   <OscillatorConrol />
   <Keyboard />
 </template>

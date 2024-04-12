@@ -5,7 +5,7 @@ export class OscillatorNote extends Note {
         super(audioContext, noteProperties, velocity);
         oscillatorProperties.forEach(oscillatorProperty => {
             let gain = this.audioContext.createGain();
-            gain.gain.value = oscillatorProperty.gain || 0.5;
+            gain.gain.value = oscillatorProperty.gain;
             let oscillator = this.audioContext.createOscillator();
             oscillator.detune.value = oscillatorProperty.detune || 0;
             oscillator.frequency.value = oscillatorProperty.frequency || 440;

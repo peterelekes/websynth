@@ -7,4 +7,6 @@ export const store = reactive({
     sustain: 0.5,
     release: 0.1,
     oscillators: [],
+    filters: [],
+    panner: null
 });
