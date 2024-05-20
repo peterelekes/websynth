@@ -8,6 +8,7 @@ import {OscillatorProperties} from "@/util/OscillatorProperties.js";
 import HighPassFilter from "@/components/fx/HighPassFilter.vue";
 import LowPassFilter from "@/components/fx/LowPassFilter.vue";
 import Panner from "@/components/fx/Panner.vue";
+import Reverb from "@/components/fx/Reverb.vue";
 
 const props = defineProps({
   audioContext: Object,
@@ -35,7 +36,15 @@ onMounted(() => {
     store.oscillators.forEach((oscillator) => {
       oscillatorProperties.push(new OscillatorProperties(oscillator.detune, getFrequency(key), oscillator.gain, oscillator.type));
     });
-    noteProperties = new NoteProperties(parseFloat(attack.value), parseFloat(decay.value), parseFloat(sustain.value), parseFloat(release.value), store.filters, store.panner);
+    noteProperties = new NoteProperties(
+        parseFloat(attack.value),
+        parseFloat(decay.value),
+        parseFloat(sustain.value),
+        parseFloat(release.value),
+        store.filters,
+        store.panner,
+        store.reverb
+    );
     playingNotes.push(new OscillatorNote(audioContext, noteProperties, oscillatorProperties, parseFloat(volume.value)));
   });
   emitter.on("releaseNote", (key) => {
@@ -67,6 +76,7 @@ onBeforeUnmount(() => {
     <HighPassFilter :audioContext="audioContext"/>
     <LowPassFilter :audioContext="audioContext"/>
     <Panner />
+    <Reverb :audioContext="audioContext"/>
   </div>
 </template>
 

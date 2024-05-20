@@ -8,5 +8,6 @@ export const store = reactive({
     release: 0.1,
     oscillators: [],
     filters: [],
-    panner: null
+    panner: null,
+    reverb: null,
 });
