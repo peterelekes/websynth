@@ -20,28 +20,7 @@ export class OscillatorNote extends Note {
             else {
                 oscillator.type = oscillatorProperty.type || "sine";
             }
-            let lastNode = oscillator;
-            let effectTracker = 1;
-            if (noteProperties.highPassFilter) {
-                lastNode.connect(noteProperties.highPassFilter);
-                lastNode = noteProperties.highPassFilter;
-                effectTracker++;
-            }
-            if (noteProperties.lowPassFilter) {
-                lastNode.connect(noteProperties.lowPassFilter);
-                lastNode = noteProperties.lowPassFilter;
-                effectTracker++;
-            }
-            if (noteProperties.panner) {
-                lastNode.connect(noteProperties.panner.pannerNode);
-                lastNode = noteProperties.panner.pannerNode;
-                setInterval(() => {
-                    noteProperties.panner.updatePanning();
-                }, 1000 / 60);
-                effectTracker++;
-            }
-            gain.gain.value = gain.gain.value / effectTracker;
-            lastNode.connect(gain).connect(this.gainNode);
+            oscillator.connect(gain).connect(this.gainNode);
             oscillator.start();
             this.oscillators.push(oscillator);
         });

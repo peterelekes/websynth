@@ -18,18 +18,40 @@ export class Note {
         this.release = noteProperties.release;
         this.velocity = velocity;
         this.gainNode = this.audioContext.createGain();
-        this.gainNode.connect(this.audioContext.destination);
         Note.playingNotes++; // Increment the count of playing notes
         this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-        const gain = this.velocity / Math.sqrt(Note.playingNotes); // Adjust the gain based on the number of playing notes
+        let gain = this.velocity / Math.sqrt(Note.playingNotes); // Adjust the gain based on the number of playing notes
+        let lastNode = this.gainNode;
+        let effectTracker = 1;
+        if (noteProperties.highPassFilter) {
+            lastNode.connect(noteProperties.highPassFilter);
+            lastNode = noteProperties.highPassFilter;
+            effectTracker++;
+        }
+        if (noteProperties.lowPassFilter) {
+            lastNode.connect(noteProperties.lowPassFilter);
+            lastNode = noteProperties.lowPassFilter;
+            effectTracker++;
+        }
+        if (noteProperties.panner) {
+            lastNode.connect(noteProperties.panner.pannerNode);
+            lastNode = noteProperties.panner.pannerNode;
+            setInterval(() => {
+                noteProperties.panner.updatePanning();
+            }, 1000 / 60);
+            effectTracker++;
+        }
+        if(noteProperties.reverb) {
+            lastNode.connect(noteProperties.reverb);
+            lastNode = noteProperties.reverb;
+            effectTracker++;
+        }
         this.gainNode.gain
             .linearRampToValueAtTime(gain, this.audioContext.currentTime + this.attack);
         this.gainNode.gain
             .setTargetAtTime(this.sustain * gain, this.audioContext.currentTime + this.attack, this.decay);
-        if(noteProperties.reverb) {
-            this.gainNode.connect(noteProperties.reverb);
-            noteProperties.reverb.connect(this.audioContext.destination);
-        }
+        this.gainNode.connect(lastNode);
+        lastNode.connect(this.audioContext.destination);
     }
 
     releaseNote() {
