@@ -22,9 +22,8 @@ let reverb;
 watch(enabled, (value) => {
   if (value) {
     reverb = new Reverb(props.audioContext, reverbUrl.value);
-    store.reverb = reverb;
-  }
-  else {
+    store.reverb = reverb.convolver;
+  } else {
     store.reverb = null;
   }
 });
@@ -32,6 +31,8 @@ watch(enabled, (value) => {
 watch(reverbUrl, (value) => {
   if (reverb) {
     reverb.reverbUrl = value;
+    reverb = new Reverb(props.audioContext, reverbUrl.value);
+    store.reverb = reverb.convolver;
   }
 });
 

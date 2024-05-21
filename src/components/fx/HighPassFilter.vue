@@ -22,9 +22,9 @@ watch(Q, (value) => {
 
 watch(enabled, (value) => {
   if (value) {
-    store.filters.push(highPassFilter);
+    store.highPassFilter = highPassFilter;
   } else {
-    store.filters = store.filters.filter((filter) => filter !== highPassFilter);
+    store.highPassFilter = null;
   }
 });
 

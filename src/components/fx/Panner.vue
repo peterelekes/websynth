@@ -3,14 +3,18 @@ import {ref, watch} from "vue";
 import Panner from "@/util/Panner.js";
 import {store} from "@/store/store.js";
 
+const props = defineProps({
+  audioContext: Object,
+});
+
 const enabled = ref(false);
-const deviation = ref(0);
-const frequency = ref(0);
+const deviation = ref(0.5);
+const frequency = ref(1);
 let panner;
 
 watch(enabled, (value) => {
   if (value) {
-    panner = new Panner(deviation.value, frequency.value);
+    panner = new Panner(props.audioContext, deviation.value, frequency.value);
     store.panner = panner;
   } else {
     store.panner = null;
@@ -38,7 +42,7 @@ watch(frequency, (value) => {
     <label>Enabled: <input v-model="enabled" type="checkbox"></label>
     <label>Deviation: <input v-model="deviation" type="range" min="0" max="1" step="0.1"></label>
     {{ deviation }}
-    <label>Frequency: <input v-model="frequency" type="range" min="0" max="1" step="0.1"></label>
+    <label>Frequency: <input v-model="frequency" type="range" min="1" max="5" step="0.5"></label>
     {{ frequency }}
   </div>
 

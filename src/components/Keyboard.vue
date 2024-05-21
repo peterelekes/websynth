@@ -1,10 +1,13 @@
 <script setup>
 import keyMap from "@/util/keyMap.js";
 import computerKeyboardMap from "@/util/computerKeyboardMap.js";
-import {ref, onMounted, onBeforeUnmount , watch} from "vue";
+import {ref, onMounted, onBeforeUnmount} from "vue";
 import emitter from "@/mitt.js";
 
 const pressedKeys = ref([]);
+let midiAccess;
+const midiDevices = ref([]);
+const selectedMidiDevice = ref(null);
 
 function handleKeyDown(event) {
   const key = computerKeyboardMap.get(event.key);
@@ -21,20 +24,62 @@ function handleKeyUp(event) {
   }
 }
 
+function handleMIDIMessage(event) {
+  if (event.target !== selectedMidiDevice.value) return;
+
+  const [status, note, velocity] = event.data;
+  const key = note;
+
+  if (status === 144 && velocity > 0) { // Note on message
+    emitter.emit('playNote', key);
+  } else if (status === 128 || (status === 144 && velocity === 0)) { // Note off message
+    emitter.emit('releaseNote', key);
+  }
+}
+
 onMounted(() => {
   window.addEventListener("keydown", handleKeyDown);
   window.addEventListener("keyup", handleKeyUp);
 });
 
+onMounted(async () => {
+  window.addEventListener("keydown", handleKeyDown);
+  window.addEventListener("keyup", handleKeyUp);
+
+  if (navigator.requestMIDIAccess) {
+    try {
+      midiAccess = await navigator.requestMIDIAccess();
+      midiDevices.value = Array.from(midiAccess.inputs.values());
+      selectedMidiDevice.value = midiDevices.value[0];
+      for (let input of midiDevices.value) {
+        input.onmidimessage = handleMIDIMessage;
+      }
+    } catch (err) {
+      console.error("No access to MIDI devices: " + err);
+    }
+  } else {
+    console.error("Browser does not support WebMIDI!");
+  }
+});
+
 onBeforeUnmount(() => {
   window.removeEventListener("keydown", handleKeyDown);
   window.removeEventListener("keyup", handleKeyUp);
+  if (midiAccess) {
+    for (let input of midiDevices.value) {
+      input.onmidimessage = null;
+    }
+  }
 });
 </script>
 
 <template>
+  <label v-if="midiDevices.length > 0">MIDI Device:
+    <select v-model="selectedMidiDevice">
+      <option v-for="device in midiDevices" :key="device.id" :value="device">{{ device.name }}</option>
+    </select>
+  </label>
   <div class="keyboard">
-    <!-- Render white keys -->
     <div v-for="key in keyMap"
          :key="key.note"
          class="key"

@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, onBeforeUnmount, ref} from "vue";
+import {onMounted, onBeforeUnmount, ref, watch} from "vue";
 import emitter from "@/mitt.js";
 import {store} from "@/store/store.js";
 import OscillatorNote from "@/util/OscillatorNote.js";
@@ -22,6 +22,26 @@ const sustain = ref(0.5);
 const release = ref(0.1);
 const volume = ref(0.5);
 let noteProperties = new NoteProperties(attack.value, decay.value, sustain.value, release.value);
+let highPassFilter = store.highPassFilter;
+let lowPassFilter = store.lowPassFilter;
+let panner = store.panner;
+let reverb = store.reverb;
+
+watch(() => store.highPassFilter, (value) => {
+  highPassFilter = value;
+});
+
+watch(() => store.lowPassFilter, (value) => {
+  lowPassFilter = value;
+});
+
+watch(() => store.panner, (value) => {
+  panner = value;
+});
+
+watch(() => store.reverb, (value) => {
+  reverb = value;
+});
 
 function getFrequency(key) {
   return Math.pow(2, (key - 69) / 12) * 440;
@@ -34,18 +54,33 @@ onMounted(() => {
     }
     let oscillatorProperties = [];
     store.oscillators.forEach((oscillator) => {
-      oscillatorProperties.push(new OscillatorProperties(oscillator.detune, getFrequency(key), oscillator.gain, oscillator.type));
+      oscillatorProperties.push(
+          new OscillatorProperties(
+              oscillator.detune,
+              getFrequency(key),
+              oscillator.gain,
+              oscillator.type
+          )
+      );
     });
     noteProperties = new NoteProperties(
         parseFloat(attack.value),
         parseFloat(decay.value),
         parseFloat(sustain.value),
         parseFloat(release.value),
-        store.filters,
-        store.panner,
-        store.reverb
+        highPassFilter,
+        lowPassFilter,
+        panner,
+        reverb
     );
-    playingNotes.push(new OscillatorNote(audioContext, noteProperties, oscillatorProperties, parseFloat(volume.value)));
+    playingNotes.push(
+        new OscillatorNote(
+            audioContext,
+            noteProperties,
+            oscillatorProperties,
+            parseFloat(volume.value) / store.oscillators.length
+        )
+    );
   });
   emitter.on("releaseNote", (key) => {
     playingNotes = playingNotes.filter((note) => {
@@ -75,7 +110,7 @@ onBeforeUnmount(() => {
   <div class="effects">
     <HighPassFilter :audioContext="audioContext"/>
     <LowPassFilter :audioContext="audioContext"/>
-    <Panner />
+    <Panner :audioContext="audioContext"/>
     <Reverb :audioContext="audioContext"/>
   </div>
 </template>
