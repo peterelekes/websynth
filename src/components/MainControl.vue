@@ -5,10 +5,7 @@ import {store} from "@/store/store.js";
 import OscillatorNote from "@/util/OscillatorNote.js";
 import {NoteProperties} from "@/util/NoteProperties.js";
 import {OscillatorProperties} from "@/util/OscillatorProperties.js";
-import HighPassFilter from "@/components/fx/HighPassFilter.vue";
-import LowPassFilter from "@/components/fx/LowPassFilter.vue";
-import Panner from "@/components/fx/Panner.vue";
-import Reverb from "@/components/fx/Reverb.vue";
+import Effects from "@/components/Effects.vue";
 
 const props = defineProps({
   audioContext: Object,
@@ -26,6 +23,7 @@ let highPassFilter = store.highPassFilter;
 let lowPassFilter = store.lowPassFilter;
 let panner = store.panner;
 let reverb = store.reverb;
+let effectOrder = store.effectOrder;
 
 watch(() => store.highPassFilter, (value) => {
   highPassFilter = value;
@@ -41,6 +39,10 @@ watch(() => store.panner, (value) => {
 
 watch(() => store.reverb, (value) => {
   reverb = value;
+});
+
+watch(() => store.effectOrder, (value) => {
+  effectOrder = value;
 });
 
 function getFrequency(key) {
@@ -71,7 +73,8 @@ onMounted(() => {
         highPassFilter,
         lowPassFilter,
         panner,
-        reverb
+        reverb,
+        effectOrder
     );
     playingNotes.push(
         new OscillatorNote(
@@ -108,10 +111,7 @@ onBeforeUnmount(() => {
     <label>Volume: <input v-model="volume" type="range" min="0" max="1" step="0.01"></label>
   </div>
   <div class="effects">
-    <HighPassFilter :audioContext="audioContext"/>
-    <LowPassFilter :audioContext="audioContext"/>
-    <Panner :audioContext="audioContext"/>
-    <Reverb :audioContext="audioContext"/>
+    <Effects :audioContext="audioContext"/>
   </div>
 </template>
 

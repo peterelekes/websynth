@@ -25,25 +25,37 @@ export class Note {
             .linearRampToValueAtTime(gain, this.audioContext.currentTime + this.attack);
         this.gainNode.gain
             .setTargetAtTime(this.sustain * gain, this.audioContext.currentTime + this.attack, this.decay);
+        this.gainNode.disconnect();
+        if (noteProperties.highPassFilter) noteProperties.highPassFilter.disconnect();
+        if (noteProperties.lowPassFilter) noteProperties.lowPassFilter.disconnect();
+        if (noteProperties.panner) noteProperties.panner.pannerNode.disconnect();
+        if (noteProperties.reverb) noteProperties.reverb.disconnect();
         let lastNode = this.gainNode;
-        if (noteProperties.highPassFilter) {
-            lastNode.connect(noteProperties.highPassFilter);
-            lastNode = noteProperties.highPassFilter;
-        }
-        if (noteProperties.lowPassFilter) {
-            lastNode.connect(noteProperties.lowPassFilter);
-            lastNode = noteProperties.lowPassFilter;
-        }
-        if (noteProperties.panner) {
-            lastNode.connect(noteProperties.panner.pannerNode);
-            lastNode = noteProperties.panner.pannerNode;
-            setInterval(() => {
-                noteProperties.panner.updatePanning();
-            }, 1000 / 60);
-        }
-        if(noteProperties.reverb) {
-            lastNode.connect(noteProperties.reverb);
-            lastNode = noteProperties.reverb;
+        const effectOrder = store.effectOrder; //1=highpass, 2=lowpass, 3=panner, 4=reverb
+        for (let i = 0; i < effectOrder.length; i++) {
+            if (effectOrder[i] === 1 && noteProperties.highPassFilter) {
+                lastNode.connect(noteProperties.highPassFilter);
+                lastNode = noteProperties.highPassFilter;
+                console.log("highpass " + i);
+            }
+            if (effectOrder[i] === 2 && noteProperties.lowPassFilter) {
+                lastNode.connect(noteProperties.lowPassFilter);
+                lastNode = noteProperties.lowPassFilter;
+                console.log("lowpass " + i);
+            }
+            if (effectOrder[i] === 3 && noteProperties.panner) {
+                lastNode.connect(noteProperties.panner.pannerNode);
+                lastNode = noteProperties.panner.pannerNode;
+                setInterval(() => {
+                    noteProperties.panner.updatePanning();
+                }, 1000 / 60);
+                console.log("panner " + i);
+            }
+            if (effectOrder[i] === 4 && noteProperties.reverb) {
+                lastNode.connect(noteProperties.reverb);
+                lastNode = noteProperties.reverb;
+                console.log("reverb " + i);
+            }
         }
         lastNode.connect(this.audioContext.destination);
     }

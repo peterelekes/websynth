@@ -7,7 +7,8 @@ export class NoteProperties {
     lowPassFilter;
     panner;
     reverb;
-    constructor(attack, decay, sustain, release, highPassFilter, lowPassFilter, panner, reverb) {
+    effectOrder;
+    constructor(attack, decay, sustain, release, highPassFilter, lowPassFilter, panner, reverb, effectOrder) {
         this.attack = attack;
         this.decay = decay;
         this.sustain = sustain;
@@ -16,5 +17,6 @@ export class NoteProperties {
         this.lowPassFilter = lowPassFilter;
         this.panner = panner;
         this.reverb = reverb;
+        this.effectOrder = effectOrder;
     }
 }

@@ -38,16 +38,35 @@ watch(reverbUrl, (value) => {
 
 
 </script>
-
 <template>
   <div class="reverb">
     <h2>Reverb</h2>
-    <label>Enabled: <input v-model="enabled" type="checkbox"></label>
-    <label>Impulse Response:
-      <select v-model="reverbUrl">
-        <option v-for="impulseResponse in impulseResponses" :key="impulseResponse.url" :value="impulseResponse.url">{{ impulseResponse.name }}</option>
-      </select>
-    </label>
+    <div class="enabled">
+      <input v-model="enabled" type="checkbox">
+    </div>
+    <div class="reverbUrl">
+      <label>Impulse Response:
+        <select v-model="reverbUrl">
+          <option v-for="impulseResponse in impulseResponses" :key="impulseResponse.url" :value="impulseResponse.url">{{ impulseResponse.name }}</option>
+        </select>
+      </label>
+    </div>
   </div>
 </template>
 
+<style scoped>
+.reverb {
+  display: grid;
+  text-align: center;
+}
+
+input[type="checkbox"] {
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+}
+
+select {
+  width: 100%;
+}
+</style>
