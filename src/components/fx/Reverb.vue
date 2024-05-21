@@ -29,7 +29,7 @@ watch(enabled, (value) => {
 });
 
 watch(reverbUrl, (value) => {
-  if (reverb) {
+  if (reverb && enabled.value) {
     reverb.reverbUrl = value;
     reverb = new Reverb(props.audioContext, reverbUrl.value);
     store.reverb = reverb.convolver;

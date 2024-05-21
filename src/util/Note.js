@@ -21,17 +21,18 @@ export class Note {
         Note.playingNotes++; // Increment the count of playing notes
         this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
         let gain = this.velocity / Math.sqrt(Note.playingNotes); // Adjust the gain based on the number of playing notes
+        this.gainNode.gain
+            .linearRampToValueAtTime(gain, this.audioContext.currentTime + this.attack);
+        this.gainNode.gain
+            .setTargetAtTime(this.sustain * gain, this.audioContext.currentTime + this.attack, this.decay);
         let lastNode = this.gainNode;
-        let effectTracker = 1;
         if (noteProperties.highPassFilter) {
             lastNode.connect(noteProperties.highPassFilter);
             lastNode = noteProperties.highPassFilter;
-            effectTracker++;
         }
         if (noteProperties.lowPassFilter) {
             lastNode.connect(noteProperties.lowPassFilter);
             lastNode = noteProperties.lowPassFilter;
-            effectTracker++;
         }
         if (noteProperties.panner) {
             lastNode.connect(noteProperties.panner.pannerNode);
@@ -39,18 +40,11 @@ export class Note {
             setInterval(() => {
                 noteProperties.panner.updatePanning();
             }, 1000 / 60);
-            effectTracker++;
         }
         if(noteProperties.reverb) {
             lastNode.connect(noteProperties.reverb);
             lastNode = noteProperties.reverb;
-            effectTracker++;
         }
-        this.gainNode.gain
-            .linearRampToValueAtTime(gain, this.audioContext.currentTime + this.attack);
-        this.gainNode.gain
-            .setTargetAtTime(this.sustain * gain, this.audioContext.currentTime + this.attack, this.decay);
-        this.gainNode.connect(lastNode);
         lastNode.connect(this.audioContext.destination);
     }
 
