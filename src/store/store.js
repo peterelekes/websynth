@@ -12,5 +12,7 @@ export const store = reactive({
     lowPassFilter: null,
     panner: null,
     reverb: null,
-    effectOrder: [1, 2, 3, 4],
+    chorus: null,
+    distortion: null,
+    effectOrder: [1, 2, 3, 4, 5, 6],
 });

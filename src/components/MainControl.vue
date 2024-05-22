@@ -23,6 +23,8 @@ let highPassFilter = store.highPassFilter;
 let lowPassFilter = store.lowPassFilter;
 let panner = store.panner;
 let reverb = store.reverb;
+let chorus = store.chorus;
+let distortion = store.distortion;
 let effectOrder = store.effectOrder;
 
 watch(() => store.highPassFilter, (value) => {
@@ -39,6 +41,14 @@ watch(() => store.panner, (value) => {
 
 watch(() => store.reverb, (value) => {
   reverb = value;
+});
+
+watch(() => store.chorus, (value) => {
+  chorus = value;
+});
+
+watch(() => store.distortion, (value) => {
+  distortion = value;
 });
 
 watch(() => store.effectOrder, (value) => {
@@ -74,6 +84,8 @@ onMounted(() => {
         lowPassFilter,
         panner,
         reverb,
+        chorus,
+        distortion,
         effectOrder
     );
     playingNotes.push(

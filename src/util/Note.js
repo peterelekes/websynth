@@ -8,6 +8,7 @@ export class Note {
     release;
     oscillators = [];
     velocity;
+    noteProperties;
     reverbDecay;
     static playingNotes = 0; // Static variable to keep track of the number of notes playing
     constructor(audioContext, noteProperties, velocity) {
@@ -17,21 +18,32 @@ export class Note {
         this.sustain = noteProperties.sustain;
         this.release = noteProperties.release;
         this.velocity = velocity;
+        this.noteProperties = noteProperties;
         this.gainNode = this.audioContext.createGain();
         Note.playingNotes++; // Increment the count of playing notes
         this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-        let gain = this.velocity / Math.sqrt(Note.playingNotes); // Adjust the gain based on the number of playing notes
+        let gain = this.velocity / Math.sqrt(Note.playingNotes);
+        if(noteProperties.distortion) gain = gain * 0.2
         this.gainNode.gain
             .linearRampToValueAtTime(gain, this.audioContext.currentTime + this.attack);
         this.gainNode.gain
             .setTargetAtTime(this.sustain * gain, this.audioContext.currentTime + this.attack, this.decay);
+        this.disconnectPreviousNodes(noteProperties);
+        this.connectNewNodes(noteProperties);
+    }
+
+    disconnectPreviousNodes(noteProperties) {
         this.gainNode.disconnect();
         if (noteProperties.highPassFilter) noteProperties.highPassFilter.disconnect();
         if (noteProperties.lowPassFilter) noteProperties.lowPassFilter.disconnect();
         if (noteProperties.panner) noteProperties.panner.pannerNode.disconnect();
         if (noteProperties.reverb) noteProperties.reverb.disconnect();
+        if(noteProperties.distortion) noteProperties.distortion.distortionNode.disconnect();
+    }
+
+    connectNewNodes(noteProperties) {
         let lastNode = this.gainNode;
-        const effectOrder = store.effectOrder; //1=highpass, 2=lowpass, 3=panner, 4=reverb
+        const effectOrder = store.effectOrder; //1=highpass, 2=lowpass, 3=panner, 4=reverb, 6=distortion
         for (let i = 0; i < effectOrder.length; i++) {
             if (effectOrder[i] === 1 && noteProperties.highPassFilter) {
                 lastNode.connect(noteProperties.highPassFilter);
@@ -55,6 +67,11 @@ export class Note {
                 lastNode.connect(noteProperties.reverb);
                 lastNode = noteProperties.reverb;
                 console.log("reverb " + i);
+            }
+            if(effectOrder[i] === 6 && noteProperties.distortion){
+                lastNode.connect(noteProperties.distortion.distortionNode);
+                lastNode = noteProperties.distortion.distortionNode;
+                console.log("distortion " + i);
             }
         }
         lastNode.connect(this.audioContext.destination);

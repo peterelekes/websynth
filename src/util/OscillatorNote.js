@@ -23,6 +23,21 @@ export class OscillatorNote extends Note {
             oscillator.connect(gain).connect(this.gainNode);
             oscillator.start();
             this.oscillators.push(oscillator);
+            if(noteProperties.chorus){
+                for(let i=0; i<3; i++) {
+                    let chorus = this.audioContext.createOscillator();
+                    chorus.detune.value = noteProperties.chorus.detune * Math.pow(-1, i);
+                    chorus.frequency.value = oscillatorProperty.frequency;
+                    chorus.type = oscillatorProperty.type;
+                    let chorusGain = this.audioContext.createGain();
+                    chorusGain.gain.value = oscillatorProperty.gain / 3;
+                    let chorusDelay = this.audioContext.createDelay();
+                    chorusDelay.delayTime.value = noteProperties.chorus.delayTime;
+                    chorus.connect(chorusGain).connect(chorusDelay).connect(gain);
+                    chorus.start();
+                    this.oscillators.push(chorus);
+                }
+            }
         });
     }
 }
