@@ -25,6 +25,7 @@ let panner = store.panner;
 let reverb = store.reverb;
 let chorus = store.chorus;
 let distortion = store.distortion;
+let flanger = store.flanger;
 let effectOrder = store.effectOrder;
 
 watch(() => store.highPassFilter, (value) => {
@@ -49,6 +50,10 @@ watch(() => store.chorus, (value) => {
 
 watch(() => store.distortion, (value) => {
   distortion = value;
+});
+
+watch(() => store.flanger, (value) => {
+  flanger = value;
 });
 
 watch(() => store.effectOrder, (value) => {
@@ -86,6 +91,7 @@ onMounted(() => {
         reverb,
         chorus,
         distortion,
+        flanger,
         effectOrder
     );
     playingNotes.push(

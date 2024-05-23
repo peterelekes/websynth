@@ -14,5 +14,7 @@ export const store = reactive({
     reverb: null,
     chorus: null,
     distortion: null,
-    effectOrder: [1, 2, 3, 4, 5, 6],
+    flanger: null,
+    lastNode: null,
+    effectOrder: [1, 2, 3, 4, 5, 6, 7],
 });

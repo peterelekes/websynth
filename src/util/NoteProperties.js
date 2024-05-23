@@ -10,7 +10,18 @@ export class NoteProperties {
     chorus;
     distortion;
     effectOrder;
-    constructor(attack, decay, sustain, release, highPassFilter, lowPassFilter, panner, reverb, chorus, distortion, effectOrder) {
+    constructor(attack,
+                decay,
+                sustain,
+                release,
+                highPassFilter,
+                lowPassFilter,
+                panner,
+                reverb,
+                chorus,
+                distortion,
+                flanger,
+                effectOrder) {
         this.attack = attack;
         this.decay = decay;
         this.sustain = sustain;
@@ -21,6 +32,7 @@ export class NoteProperties {
         this.reverb = reverb;
         this.chorus = chorus;
         this.distortion = distortion;
+        this.flanger = flanger;
         this.effectOrder = effectOrder;
     }
 }

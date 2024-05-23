@@ -5,6 +5,7 @@ import Panner from "@/components/fx/Panner.vue";
 import Reverb from "@/components/fx/Reverb.vue";
 import Chorus from "@/components/fx/Chorus.vue";
 import Distortion from "@/components/fx/Distortion.vue";
+import Flanger from "@/components/fx/Flanger.vue";
 import draggable from 'vuedraggable'
 import {markRaw, ref} from "vue";
 import {Icon} from "@iconify/vue";
@@ -21,6 +22,7 @@ const list = ref([
   {id: 4, component: markRaw(Reverb)},
   {id: 5, component: markRaw(Chorus)},
   {id: 6, component: markRaw(Distortion)},
+  {id: 7, component: markRaw(Flanger)},
 ]);
 
 

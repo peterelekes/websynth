@@ -39,6 +39,7 @@ export class Note {
         if (noteProperties.panner) noteProperties.panner.pannerNode.disconnect();
         if (noteProperties.reverb) noteProperties.reverb.disconnect();
         if(noteProperties.distortion) noteProperties.distortion.disconnectNodes();
+        if(noteProperties.flanger) noteProperties.flanger.disconnectNodes();
     }
 
     connectNewNodes(noteProperties) {
@@ -71,8 +72,12 @@ export class Note {
             if(effectOrder[i] === 6 && noteProperties.distortion){
                 lastNode = noteProperties.distortion.connectNodes(lastNode);
             }
+            if(effectOrder[i] === 7 && noteProperties.flanger){
+                lastNode = noteProperties.flanger.connectNodes(lastNode);
+            }
         }
         lastNode.connect(this.audioContext.destination);
+        store.lastNode = lastNode;
     }
 
     releaseNote() {
