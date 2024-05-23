@@ -8,32 +8,33 @@ const props = defineProps({
 });
 
 const enabled = ref(false);
-const amount = ref(5);
-const intensity = ref(10);
+const intensity = ref(20);
+const lowPassFrequency = ref(1000);
 let distortion;
 
 watch(enabled, (value) => {
   if (value) {
-    distortion = new Distortion(props.audioContext, amount.value, intensity.value);
+    distortion = new Distortion(props.audioContext, intensity.value, lowPassFrequency.value);
     store.distortion = distortion;
   } else {
+    if(distortion) {
+      distortion.disconnectNodes();
+    }
     store.distortion = null;
-  }
-});
-
-watch(amount, (value) => {
-  if (distortion && enabled.value) {
-    distortion.amount = value;
-    distortion = new Distortion(props.audioContext, amount.value, intensity.value);
-    store.distortion = distortion;
   }
 });
 
 watch(intensity, (value) => {
   if (distortion && enabled.value) {
     distortion.intensity = value;
-    distortion = new Distortion(props.audioContext, amount.value, intensity.value);
-    store.distortion = distortion;
+    store.distortion.nodes['waveShaper'].curve = distortion.makeDistortionCurve(value);
+  }
+});
+
+watch(lowPassFrequency, (value) => {
+  if (distortion && enabled.value) {
+    distortion.lowPassFrequency = value;
+    store.distortion.nodes['lowPassFilter'].frequency.value = value;
   }
 });
 
@@ -45,11 +46,11 @@ watch(intensity, (value) => {
     <div class="enabled">
       <input v-model="enabled" type="checkbox">
     </div>
-    <div class="amount">
-      <label>Amount: {{amount}} <input v-model="amount" type="range" min="1" max="10" step="1"></label>
-    </div>
     <div class="intensity">
-      <label>Intensity: {{intensity}} <input v-model="intensity" type="range" min="1" max="10" step="1"></label>
+      <label>Intensity: {{intensity}} <input v-model="intensity" type="range" min="10" max="90" step="1"></label>
+    </div>
+    <div class="low-pass-frequency">
+      <label>Low Pass Frequency: {{lowPassFrequency}} <input v-model="lowPassFrequency" type="range" min="1" max="10000" step="1"></label>
     </div>
   </div>
 </template>

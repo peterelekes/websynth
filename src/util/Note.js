@@ -38,7 +38,7 @@ export class Note {
         if (noteProperties.lowPassFilter) noteProperties.lowPassFilter.disconnect();
         if (noteProperties.panner) noteProperties.panner.pannerNode.disconnect();
         if (noteProperties.reverb) noteProperties.reverb.disconnect();
-        if(noteProperties.distortion) noteProperties.distortion.distortionNode.disconnect();
+        if(noteProperties.distortion) noteProperties.distortion.disconnectNodes();
     }
 
     connectNewNodes(noteProperties) {
@@ -69,9 +69,7 @@ export class Note {
                 console.log("reverb " + i);
             }
             if(effectOrder[i] === 6 && noteProperties.distortion){
-                lastNode.connect(noteProperties.distortion.distortionNode);
-                lastNode = noteProperties.distortion.distortionNode;
-                console.log("distortion " + i);
+                lastNode = noteProperties.distortion.connectNodes(lastNode);
             }
         }
         lastNode.connect(this.audioContext.destination);
