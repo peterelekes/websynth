@@ -67,7 +67,7 @@ watch(volume, (value) => {
   border: var(--color-dark-blue) 1px solid;
   border-radius: 10px;
   -webkit-box-shadow: 1rem 1rem 1rem rgba(0.2, 0.9, 0.5, 0.7);
-  height: 30vh;
+  height: 25vh;
 }
 .adsr-controls .title {
   grid-column: span 2;
@@ -121,5 +121,11 @@ input[type="range"]::-moz-range-thumb {
   height: 25px;
   border-radius: 50%;
   background: var(--color-dark-blue);
+}
+
+input[type="range"]:active::-webkit-slider-thumb {
+  cursor: pointer;
+  background: var(--color-white);
+  border: var(--color-dark-blue) 1px solid;
 }
 </style>

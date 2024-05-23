@@ -55,14 +55,47 @@ const onListEnd = (event) => {
 <style scoped>
 .effects-list {
   display: flex;
+  height: 30vh;
 }
 
 .handle-effect {
   display: flex;
   align-items: center;
-  border: 1px solid black;
   position: relative;
   margin: 1rem;
+  border: 1px solid var(--color-dark-blue);
+  border-radius: 10px;
+  -webkit-box-shadow: 1rem 1rem 1rem rgba(0.2, 0.9, 0.5, 0.7);
+}
+
+.handle-effect:nth-child(1) {
+  background: var(--color-pink);
+  margin-left: 0;
+}
+
+.handle-effect:nth-child(2) {
+  background: var(--color-light-orange);
+}
+
+.handle-effect:nth-child(3) {
+  background: var(--color-light-yellow);
+}
+
+.handle-effect:nth-child(4) {
+  background: var(--color-light-green);
+}
+
+.handle-effect:nth-child(5) {
+  background: var(--color-light-blue);
+}
+
+.handle-effect:nth-child(6) {
+  background: var(--color-turqoise);
+}
+
+.handle-effect:nth-child(7) {
+  background: var(--color-light-purple);
+  margin-right: 0;
 }
 
 .handle {

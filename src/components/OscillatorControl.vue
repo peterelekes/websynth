@@ -37,13 +37,11 @@ onMounted(() => {
           <option value="sawtooth">Sawtooth</option>
           <option value="triangle">Triangle</option>
         </select>
-      <label> Gain
+      <label> Gain {{oscillator.gain}}
         <input v-model="oscillator.gain" type="range" min="0" max="1" step="0.01">
-        {{oscillator.gain}}
       </label>
-      <label> Detune
+      <label> Detune {{oscillator.detune}}
         <input v-model="oscillator.detune" type="range" min="-50" max="50" step="1">
-        {{oscillator.detune}}
       </label>
       <Icon
           icon="material-symbols:delete-rounded"
@@ -73,8 +71,8 @@ onMounted(() => {
   border-radius: 10px;
   -webkit-box-shadow: 1rem 1rem 1rem rgba(0.2, 0.9, 0.5, 0.7);
   overflow-y: auto; /* Add this line to make the div scrollable */
-  height: 30vh;
-  max-height: 30vh
+  height: 25vh;
+  max-height: 25vh
 }
 
 h2 {
@@ -119,7 +117,8 @@ input[type="range"]::-webkit-slider-thumb {
 
 input[type="range"]:active::-webkit-slider-thumb {
   cursor: pointer;
-  background: var(--color-white-pressed);
+  background: var(--color-white);
+  border: var(--color-dark-blue) 1px solid;
 }
 
 input[type="range"]::-moz-range-thumb {
@@ -145,7 +144,8 @@ select{
   border: var(--color-dark-blue) 1px solid;
   background: var(--color-white);
   outline: none;
-  justify-self: center;
+  transform: translateY(0.4rem);
+  text-align-last: center;
 }
 
 .delete-button,.add-button {
@@ -156,11 +156,6 @@ select{
   &:hover {
     color: var(--color-white);
   }
-}
-
-option {
-  background: var(--color-white);
-  text-align: center;
 }
 
 ::-webkit-scrollbar {

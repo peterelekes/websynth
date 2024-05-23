@@ -7,7 +7,7 @@ import {NoteProperties} from "@/util/NoteProperties.js";
 import {OscillatorProperties} from "@/util/OscillatorProperties.js";
 import Effects from "@/components/Effects.vue";
 import Visualizer from "@/components/Visualizer.vue";
-import OscillatorConrol from "@/components/OscillatorConrol.vue";
+import OscillatorConrol from "@/components/OscillatorControl.vue";
 import Keyboard from "@/components/Keyboard.vue";
 import ADSRControl from "@/components/fx/ADSRControl.vue";
 
@@ -176,8 +176,23 @@ onBeforeUnmount(() => {
 .adsr-oscillator {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  height: 30vh;
+  height: 25vh;
+  margin: 1rem 1rem 0;
+}
+
+.effects {
   margin: 1rem;
+  height: 30vh;
+}
+
+.keyboard-visualizer {
+  display: grid;
+  grid-template-columns: 70% 30%;
+  margin: 1rem;
+}
+
+.keyboard {
+  margin: 0 1rem;
 }
 
 </style>

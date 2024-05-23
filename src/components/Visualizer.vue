@@ -22,7 +22,7 @@ const canvas = ref(null);
 let canvasCtx = null;
 let drawVisual;
 
-const WIDTH = 800;
+const WIDTH = 400;
 const HEIGHT = 200;
 let isPlaying = ref(false);
 
@@ -62,7 +62,9 @@ function draw() {
   canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
   // Oscilloscope-like visualization using timeDomainData
-  canvasCtx.strokeStyle = "hsl(0, 0%, 70%)"; // Adjust color as needed
+  // pink
+  canvasCtx.strokeStyle = "rgb(255,62,224)";
+  canvasCtx.lineWidth = 3;
   canvasCtx.beginPath();
 
   const sliceWidth = WIDTH / bufferLength;
@@ -105,6 +107,8 @@ const visualize = () => {
 canvas {
   display: block;
   margin: 0 auto;
-  background-color: #000;
+  background-color: var(--color-dark-blue);
+  border-radius: 10px;
+  -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
 }
 </style>

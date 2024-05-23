@@ -74,11 +74,6 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <label v-if="midiDevices.length > 0">MIDI Device:
-    <select v-model="selectedMidiDevice">
-      <option v-for="device in midiDevices" :key="device.id" :value="device">{{ device.name }}</option>
-    </select>
-  </label>
   <div class="keyboard">
     <div v-for="key in keyMap"
          :key="key.note"
@@ -87,9 +82,14 @@ onBeforeUnmount(() => {
          @mousedown="emitter.emit('playNote', key.note); pressedKeys.push(key.note)"
         @mouseup="emitter.emit('releaseNote', key.note); pressedKeys = pressedKeys.filter((k) => k !== key.note)"
     >
-      {{ key.name }}
+      <span>{{ key.name }}</span>
     </div>
   </div>
+  <label v-if="midiDevices.length > 0">MIDI Device:
+    <select v-model="selectedMidiDevice">
+      <option v-for="device in midiDevices" :key="device.id" :value="device">{{ device.name }}</option>
+    </select>
+  </label>
 </template>
 
 <style scoped>
@@ -98,19 +98,26 @@ onBeforeUnmount(() => {
   flex-direction: row;
 }
 
+span {
+  font-size: 0.8em;
+  text-align: center;
+
+}
+
 .key {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding-bottom: 5px;
   align-items: center;
   border: 1px var(--color-key-border) solid;
+  border-radius: 0 0 5px 5px;
 }
 
 .white {
   background-color: var(--color-key-white);
   width: var(--key-width);
   height: var(--key-height);
+  -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
 }
 .white:hover {
   background-color: var(--color-key-white-hover);

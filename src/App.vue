@@ -32,6 +32,8 @@ body, .app-container {
   padding: 0;
   background: rgb(34,193,195);
   background: linear-gradient(148deg, rgba(34,193,195,1) 0%, rgba(96,135,197,1) 39%, rgba(158,200,185,1) 100%);
+  height: 100vh;
+  width: 100vw;
 }
 
 .fade-enter-active, .fade-leave-active {
