@@ -109,6 +109,7 @@ canvas {
   margin: 0 auto;
   background-color: var(--color-dark-blue);
   border-radius: 10px;
+  border: 1px solid var(--color-dark-blue);
   -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
 }
 </style>

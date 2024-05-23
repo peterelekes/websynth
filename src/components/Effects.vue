@@ -7,7 +7,7 @@ import Chorus from "@/components/fx/Chorus.vue";
 import Distortion from "@/components/fx/Distortion.vue";
 import Flanger from "@/components/fx/Flanger.vue";
 import draggable from 'vuedraggable'
-import {markRaw, ref} from "vue";
+import {markRaw, onMounted, ref} from "vue";
 import {Icon} from "@iconify/vue";
 import {store} from "@/store/store.js";
 
@@ -31,12 +31,35 @@ const onListEnd = (event) => {
   console.log(store.effectOrder);
 };
 
+const dragOptions = ref(null);
+
+onMounted(() => {
+  dragOptions.value = {
+    animation: 300,
+    group: "description",
+    ghostClass: "ghost",
+    chosenClass: "no-move",
+    forceFallback: true,
+    fallbackOnBody: true,
+    swapThreshold: 0.8,
+    invertSwap: true,
+    handle: ".handle",
+  };
+});
+
 </script>
 
 <template>
   <div class="effects">
-    <draggable class="effects-list" :list="list" :itemKey="'id'" handle=".handle" v-slot:item="{element}" @end="onListEnd">
-      <div :key="element.id" class="handle-effect">
+    <draggable
+        class="effects-list"
+        :list="list" :itemKey="'id'"
+        handle=".handle"
+        v-slot:item="{element}"
+        v-bind="dragOptions"
+        @end="onListEnd">
+      <transition-group name="list" tag="div">
+        <div :key="element.id" class="handle-effect" :class="`effect-${element.id}`">
           <div class="handle">
             <Icon
                 icon="radix-icons:drag-handle-horizontal"
@@ -48,15 +71,26 @@ const onListEnd = (event) => {
             <component :is="element.component" :audioContext="props.audioContext"/>
           </div>
         </div>
+      </transition-group>
     </draggable>
   </div>
 </template>
 
 <style scoped>
+
+.no-move {
+  transition: transform 0s;
+}
+
+.ghost {
+  opacity: 0.8;
+}
+
 .effects-list {
   display: flex;
   height: 30vh;
 }
+
 
 .handle-effect {
   display: flex;
@@ -66,35 +100,42 @@ const onListEnd = (event) => {
   border: 1px solid var(--color-dark-blue);
   border-radius: 10px;
   -webkit-box-shadow: 1rem 1rem 1rem rgba(0.2, 0.9, 0.5, 0.7);
+  min-height: 88%;
 }
 
-.handle-effect:nth-child(1) {
+.handle-effect.effect-1{
   background: var(--color-pink);
-  margin-left: 0;
 }
 
-.handle-effect:nth-child(2) {
+.handle-effect.effect-2 {
   background: var(--color-light-orange);
 }
 
-.handle-effect:nth-child(3) {
+.handle-effect.effect-3{
   background: var(--color-light-yellow);
 }
 
-.handle-effect:nth-child(4) {
+.handle-effect.effect-4 {
   background: var(--color-light-green);
 }
 
-.handle-effect:nth-child(5) {
+.handle-effect.effect-5{
   background: var(--color-light-blue);
 }
 
-.handle-effect:nth-child(6) {
+.handle-effect.effect-6 {
   background: var(--color-turqoise);
 }
 
-.handle-effect:nth-child(7) {
+.handle-effect.effect-7 {
   background: var(--color-light-purple);
+}
+
+.handle-effect:first-child{
+  margin-left: 0;
+}
+
+.handle-effect.last-child{
   margin-right: 0;
 }
 
