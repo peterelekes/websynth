@@ -8,7 +8,7 @@ const props = defineProps({
 });
 
 const enabled = ref(false);
-const intensity = ref(20);
+const intensity = ref(300);
 const lowPassFrequency = ref(1000);
 let distortion;
 
@@ -17,9 +17,6 @@ watch(enabled, (value) => {
     distortion = new Distortion(props.audioContext, intensity.value, lowPassFrequency.value);
     store.distortion = distortion;
   } else {
-    if(distortion) {
-      distortion.disconnectNodes();
-    }
     store.distortion = null;
   }
 });
@@ -27,7 +24,7 @@ watch(enabled, (value) => {
 watch(intensity, (value) => {
   if (distortion && enabled.value) {
     distortion.intensity = value;
-    store.distortion.nodes['waveShaper'].curve = distortion.makeDistortionCurve(value);
+    store.distortion.makeDistortionCurve(value);
   }
 });
 
@@ -47,7 +44,7 @@ watch(lowPassFrequency, (value) => {
       <input v-model="enabled" type="checkbox">
     </div>
     <div class="intensity">
-      <label>Intensity: {{intensity}} <input v-model="intensity" type="range" min="10" max="90" step="1"></label>
+      <label>Intensity: {{intensity}} <input v-model="intensity" type="range" min="100" max="900" step="1"></label>
     </div>
     <div class="low-pass-frequency">
       <label>Low Pass Frequency: {{lowPassFrequency}} <input v-model="lowPassFrequency" type="range" min="1" max="10000" step="1"></label>

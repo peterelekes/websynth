@@ -12,8 +12,6 @@ export class Distortion {
         let waveShaper = this.audioContext.createWaveShaper();
         filter.type = "lowpass";
         filter.frequency.value = this.lowPassFrequency;
-        waveShaper.curve = this.makeDistortionCurve(this.intensity);
-        waveShaper.overSample = "4x";
         this.nodes = {
             lowPassFilter: filter,
             waveShaper: waveShaper
@@ -21,6 +19,7 @@ export class Distortion {
     }
 
     connectNodes(inputNode) {
+        this.makeDistortionCurve(this.intensity);
         let lastNode = inputNode;
         lastNode.connect(this.nodes['waveShaper']);
         lastNode = this.nodes['waveShaper'];
@@ -35,7 +34,6 @@ export class Distortion {
     }
 
     makeDistortionCurve(intensity) {
-        let k = intensity;
         let n_samples =  44100;
         let curve = new Float32Array(n_samples);
         let deg = Math.PI / 180;
@@ -44,6 +42,7 @@ export class Distortion {
             x = i * 2 / n_samples - 1;
             curve[i] = (3 + intensity) * x * 20 * deg / (Math.PI + intensity * Math.abs(x));
         }
-        return curve;
+        this.nodes['waveShaper'].curve = curve;
+        this.nodes['waveShaper'].oversample = "4x";
     }
 }

@@ -23,7 +23,7 @@ export class Note {
         Note.playingNotes++; // Increment the count of playing notes
         this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
         let gain = this.velocity / Math.sqrt(Note.playingNotes);
-        if(noteProperties.distortion) gain = gain * 0.2
+        if(noteProperties.distortion) gain = gain * 0.01;
         this.gainNode.gain
             .linearRampToValueAtTime(gain, this.audioContext.currentTime + this.attack);
         this.gainNode.gain

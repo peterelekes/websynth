@@ -1,11 +1,15 @@
 <script setup>
-import {onMounted, onBeforeUnmount, ref, watch} from "vue";
+import {onMounted, onBeforeUnmount, watch} from "vue";
 import emitter from "@/mitt.js";
 import {store} from "@/store/store.js";
 import OscillatorNote from "@/util/OscillatorNote.js";
 import {NoteProperties} from "@/util/NoteProperties.js";
 import {OscillatorProperties} from "@/util/OscillatorProperties.js";
 import Effects from "@/components/Effects.vue";
+import Visualizer from "@/components/Visualizer.vue";
+import OscillatorConrol from "@/components/OscillatorConrol.vue";
+import Keyboard from "@/components/Keyboard.vue";
+import ADSRControl from "@/components/fx/ADSRControl.vue";
 
 const props = defineProps({
   audioContext: Object,
@@ -13,12 +17,12 @@ const props = defineProps({
 
 const audioContext = props.audioContext;
 let playingNotes = [];
-const attack = ref(0.1);
-const decay = ref(0.1);
-const sustain = ref(0.5);
-const release = ref(0.1);
-const volume = ref(0.5);
-let noteProperties = new NoteProperties(attack.value, decay.value, sustain.value, release.value);
+let noteProperties = null;
+let attack = store.attack;
+let decay = store.decay;
+let sustain = store.sustain;
+let release = store.release;
+let volume = store.volume;
 let highPassFilter = store.highPassFilter;
 let lowPassFilter = store.lowPassFilter;
 let panner = store.panner;
@@ -27,6 +31,26 @@ let chorus = store.chorus;
 let distortion = store.distortion;
 let flanger = store.flanger;
 let effectOrder = store.effectOrder;
+
+watch(() => store.attack, (value) => {
+  attack = value;
+});
+
+watch(() => store.decay, (value) => {
+  decay = value;
+});
+
+watch(() => store.sustain, (value) => {
+  sustain = value;
+});
+
+watch(() => store.release, (value) => {
+  release = value;
+});
+
+watch(() => store.volume, (value) => {
+  volume = value;
+});
 
 watch(() => store.highPassFilter, (value) => {
   highPassFilter = value;
@@ -81,10 +105,10 @@ onMounted(() => {
       );
     });
     noteProperties = new NoteProperties(
-        parseFloat(attack.value),
-        parseFloat(decay.value),
-        parseFloat(sustain.value),
-        parseFloat(release.value),
+        attack,
+        decay,
+        sustain,
+        release,
         highPassFilter,
         lowPassFilter,
         panner,
@@ -99,7 +123,7 @@ onMounted(() => {
             audioContext,
             noteProperties,
             oscillatorProperties,
-            parseFloat(volume.value) / store.oscillators.length
+            volume / store.oscillators.length
         )
     );
   });
@@ -120,33 +144,40 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="adsr-controls">
-    <h2>ADSR Controls</h2>
-    <label>Attack: <input v-model="attack" type="range" min="0.05" max="1" step="0.01"></label>
-    <label>Decay: <input v-model="decay" type="range" min="0" max="1" step="0.01"></label>
-    <label>Sustain: <input v-model="sustain" type="range" min="0" max="1" step="0.01"></label>
-    <label>Release: <input v-model="release" type="range" min="0" max="1" step="0.01"></label>
-    <label>Volume: <input v-model="volume" type="range" min="0" max="1" step="0.01"></label>
-  </div>
-  <div class="effects">
-    <Effects :audioContext="audioContext"/>
+  <div class="page">
+    <div class="adsr-oscillator">
+      <div class="adsr">
+        <ADSRControl/>
+      </div>
+      <div class="oscillator">
+        <OscillatorConrol/>
+      </div>
+    </div>
+    <div class="effects">
+      <Effects :audioContext="audioContext"/>
+    </div>
+    <div class="keyboard-visualizer">
+      <div class="keyboard">
+        <Keyboard/>
+      </div>
+      <div class="visualizer">
+        <Visualizer :audioContext="audioContext"/>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
-/* Styles can be added here as needed */
-.adsr-controls {
-  margin-bottom: 20px;
+.page{
+  display: flex;
+  flex-direction: column;
 }
 
-label {
-  font-weight: bold;
+.adsr-oscillator {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 30vh;
+  margin: 1rem;
 }
 
-input[type="range"] {
-  margin-left: 10px;
-}
-.effects {
-  margin-top: 20px;
-}
 </style>

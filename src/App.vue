@@ -1,9 +1,7 @@
 <script setup>
-import Keyboard from "@/components/Keyboard.vue";
-import OscillatorConrol from "@/components/OscillatorConrol.vue";
 import MainControl from "@/components/MainControl.vue";
+import WelcomePage from "@/components/WelcomePage.vue";
 import {ref} from "vue";
-import Visualizer from "@/components/Visualizer.vue";
 
 let audioContext = ref(null);
 
@@ -14,22 +12,33 @@ window.addEventListener("click", async () => {
 </script>
 
 <template>
-  <MainControl v-if="audioContext" :audioContext="audioContext" />
-  <OscillatorConrol />
-  <Keyboard />
-  <visualizer v-if="audioContext" :audioContext="audioContext" />
+  <div class="app-container">
+    <transition name = "fade" mode = "out-in">
+      <div v-if="!audioContext" class="welcome-screen">
+        <WelcomePage />
+      </div>
+      <div v-else class="app">
+        <MainControl :audioContext="audioContext" />
+      </div>
+    </transition>
+  </div>
 </template>
 
 <style scoped>
-body {
-  font-family: "Expressway Rg", sans-serif;
+body, .app-container {
+  font-family: "Roboto", sans-serif;
+  color: var(--color-dark-blue);
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: #f0f0f0;
+  background: rgb(34,193,195);
+  background: linear-gradient(148deg, rgba(34,193,195,1) 0%, rgba(96,135,197,1) 39%, rgba(158,200,185,1) 100%);
 }
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
 </style>
