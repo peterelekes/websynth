@@ -77,7 +77,7 @@ onMounted(() => {
 
 h2 {
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 3rem;
   color: var(--color-white);
   -webkit-text-stroke: 1px var(--color-dark-blue);
   text-shadow: 2px 2px 0 var(--color-dark-blue), 4px 4px 0 var(--color-dark-blue), 6px 6px 0 var(--color-dark-blue);
@@ -95,6 +95,7 @@ h2 {
 
 label {
   font-weight: bold;
+  font-size: 1.2rem;
 }
 
 input[type="range"] {
@@ -146,6 +147,7 @@ select{
   outline: none;
   transform: translateY(0.4rem);
   text-align-last: center;
+  font-size: 1.2rem;
 }
 
 .delete-button,.add-button {

@@ -25,7 +25,7 @@
 }
 
 h1 {
-  font-size: 8rem;
+  font-size: 10rem;
   color: #fff;
   font-weight: bold;
   -webkit-text-stroke: 3px #000;

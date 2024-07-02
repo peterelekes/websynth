@@ -22,8 +22,8 @@ const canvas = ref(null);
 let canvasCtx = null;
 let drawVisual;
 
-const WIDTH = 400;
-const HEIGHT = 200;
+const WIDTH = 500;
+const HEIGHT = 285;
 let isPlaying = ref(false);
 
 emitter.on("playNote", () => {

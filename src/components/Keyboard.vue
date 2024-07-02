@@ -31,9 +31,9 @@ function handleMIDIMessage(event) {
   const key = note;
 
   if (status === 144 && velocity > 0) { // Note on message
-    emitter.emit('playNote', key);
+    handleKeyDown({key: key});
   } else if (status === 128 || (status === 144 && velocity === 0)) { // Note off message
-    emitter.emit('releaseNote', key);
+    handleKeyUp({key: key});
   }
 }
 
@@ -85,11 +85,13 @@ onBeforeUnmount(() => {
       <span>{{ key.name }}</span>
     </div>
   </div>
-  <label v-if="midiDevices.length > 0">MIDI Device:
-    <select v-model="selectedMidiDevice">
-      <option v-for="device in midiDevices" :key="device.id" :value="device">{{ device.name }}</option>
-    </select>
-  </label>
+  <div class="midi-device" v-if="midiDevices.length > 0">
+    <label>MIDI Device:
+      <select v-model="selectedMidiDevice">
+        <option v-for="device in midiDevices" :key="device.id" :value="device">{{ device.name }}</option>
+      </select>
+    </label>
+  </div>
 </template>
 
 <style scoped>
@@ -98,8 +100,29 @@ onBeforeUnmount(() => {
   flex-direction: row;
 }
 
+.midi-device {
+  display: flex;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  padding: 0.1rem;
+  justify-content: center;
+  select{
+    -webkit-appearance: none;
+    border-radius: 5px;
+    border: var(--color-dark-blue) 1px solid;
+    background: var(--color-white);
+    outline: none;
+    text-align-last: center;
+    font-size: 1.2rem;
+  }
+  label {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+}
+
 span {
-  font-size: 0.8em;
+  font-size: 1rem;
   text-align: center;
 
 }
@@ -113,11 +136,22 @@ span {
   border-radius: 0 0 5px 5px;
 }
 
+.key:nth-child(5),
+.key:nth-child(12),
+.key:nth-child(17),
+.key:nth-child(24),
+.key:nth-child(29),
+.key:nth-child(36),
+.key:nth-child(41),
+.key:nth-child(48){
+  border-right: none;
+}
+
 .white {
   background-color: var(--color-key-white);
   width: var(--key-width);
   height: var(--key-height);
-  -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 8px 8px 5px 0 rgba(0,0,0,0.75);
 }
 .white:hover {
   background-color: var(--color-key-white-hover);

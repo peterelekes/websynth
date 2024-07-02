@@ -70,11 +70,12 @@ select{
   outline: none;
   transform: translateY(0.4rem);
   text-align-last: center;
+  font-size: 1.2rem;
 }
 
 h2{
   font-weight: bold;
-  font-size: 1.3rem;
+  font-size: 2rem;
   color: var(--color-white);
   -webkit-text-stroke: 1px var(--color-dark-blue);
   text-shadow: 2px 2px 0 var(--color-dark-blue), 4px 4px 0 var(--color-dark-blue);
@@ -83,7 +84,7 @@ h2{
 
 label {
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 
 .toggle {
@@ -91,7 +92,7 @@ label {
   justify-content: center;
   align-items: center;
   margin-top: 0.5rem;
-  transform: translateY(1rem);
+  transform: translateY(1.8rem);
 }
 
 .toggle-checkbox {
