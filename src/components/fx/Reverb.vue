@@ -10,13 +10,13 @@ const props = defineProps({
 //TODO: Add other files, these are long and loud
 //https://www.openairlib.net/
 let impulseResponses = [
-  {name: "Cathedral", url: "websynth/impulse_response/cathedral.wav"},
-  {name: "Mine", url: "websynth/impulse_response/mine.wav"},
-  {name: "Forest", url: "websynth/impulse_response/forest.wav"},
-  {name: "Silo", url: "websynth/impulse_response/silo.m4a"},
+  {name: "Cathedral", url: "https://peterelekes.github.io/websynth/impulse_response/cathedral.wav"},
+  {name: "Mine", url: "https://peterelekes.github.io/websynth/impulse_response/mine.wav"},
+  {name: "Forest", url: "https://peterelekes.github.io/websynth/impulse_response/forest.wav"},
+  {name: "Silo", url: "https://peterelekes.github.io/websynth/impulse_response/silo.m4a"},
 ];
 const enabled = ref(false);
-const reverbUrl = ref("websynth/impulse_response/cathedral.wav");
+const reverbUrl = ref("https://peterelekes.github.io/websynth/impulse_response/cathedral.wav");
 let reverb;
 
 watch(enabled, (value) => {
