@@ -9,14 +9,15 @@ const props = defineProps({
 
 //TODO: Add other files, these are long and loud
 //https://www.openairlib.net/
+const base = import.meta.env.BASE_URL;
 let impulseResponses = [
-  {name: "Cathedral", url: "/impulse_response/cathedral.wav"},
-  {name: "Mine", url: "/impulse_response/mine.wav"},
-  {name: "Forest", url: "/impulse_response/forest.wav"},
-  {name: "Silo", url: "/impulse_response/silo.m4a"},
+  {name: "Cathedral", url: "${base}impulse_response/cathedral.wav"},
+  {name: "Mine", url: "${base}impulse_response/mine.wav"},
+  {name: "Forest", url: "${base}impulse_response/forest.wav"},
+  {name: "Silo", url: "${base}impulse_response/silo.m4a"},
 ];
 const enabled = ref(false);
-const reverbUrl = ref("/impulse_response/cathedral.wav");
+const reverbUrl = ref("${base}impulse_response/cathedral.wav");
 let reverb;
 
 watch(enabled, (value) => {
