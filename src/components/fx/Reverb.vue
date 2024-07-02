@@ -11,7 +11,7 @@ const props = defineProps({
 //https://www.openairlib.net/
 let impulseResponses = [
   {name: "Cathedral", url: "/impulse_response/cathedral.wav"},
-  {name: "Reactor", url: "/impulse_response/reactor.wav"},
+  {name: "Mine", url: "/impulse_response/mine.wav"},
   {name: "Forest", url: "/impulse_response/forest.wav"},
   {name: "Silo", url: "/impulse_response/silo.m4a"},
 ];
