@@ -7,8 +7,6 @@ const props = defineProps({
   audioContext: Object,
 });
 
-//TODO: Add other files, these are long and loud
-//https://www.openairlib.net/
 let impulseResponses = [
   {name: "Cathedral", url: "https://peterelekes.github.io/websynth/impulse_response/cathedral.wav"},
   {name: "Mine", url: "https://peterelekes.github.io/websynth/impulse_response/mine.wav"},

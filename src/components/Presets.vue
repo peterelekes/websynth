@@ -69,8 +69,8 @@ const uploadPreset = () => {
     reader.onload = (e) => {
       try {
         const data = JSON.parse(e.target.result);
-        loadPresetFromJson(data); // Load the preset data
-        selectedPreset.value = URL.createObjectURL(file); // Update selected preset
+        loadPresetFromJson(data);
+        selectedPreset.value = URL.createObjectURL(file);
       } catch (error) {
         console.error("Error parsing uploaded preset:", error);
       }

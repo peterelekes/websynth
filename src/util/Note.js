@@ -2,15 +2,10 @@ import {store} from "@/store/store.js";
 
 export class Note {
     audioContext;
-    attack;
-    decay;
-    sustain;
-    release;
-    oscillators = [];
-    velocity;
     noteProperties;
-    reverbDecay;
-    static playingNotes = 0; // Static variable to keep track of the number of notes playing
+    velocity;
+    oscillators = [];
+    static playingNotes = 0;
     constructor(audioContext, noteProperties, velocity) {
         this.audioContext = audioContext;
         this.attack = noteProperties.attack;
@@ -20,7 +15,7 @@ export class Note {
         this.velocity = velocity;
         this.noteProperties = noteProperties;
         this.gainNode = this.audioContext.createGain();
-        Note.playingNotes++; // Increment the count of playing notes
+        Note.playingNotes++;
         this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
         let gain = this.velocity / Math.sqrt(Note.playingNotes);
         if(noteProperties.distortion) gain = gain * 0.01;
@@ -44,7 +39,7 @@ export class Note {
 
     connectNewNodes(noteProperties) {
         let lastNode = this.gainNode;
-        const effectOrder = store.effectOrder; //1=highpass, 2=lowpass, 3=panner, 4=reverb, 6=distortion
+        const effectOrder = store.effectOrder;
         for (let i = 0; i < effectOrder.length; i++) {
             if (effectOrder[i] === 1 && noteProperties.highPassFilter) {
                 lastNode.connect(noteProperties.highPassFilter);
@@ -90,7 +85,7 @@ export class Note {
             0,
             this.audioContext.currentTime + this.release
         );
-        Note.playingNotes--; // Decrement the count of playing notes
+        Note.playingNotes--;
     }
 
 }

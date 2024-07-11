@@ -16,7 +16,7 @@ const analyser = props.audioContext.createAnalyser();
 analyser.fftSize = 2048;
 
 const bufferLength = analyser.frequencyBinCount;
-const dataArray = new Float32Array(bufferLength); // Use Float32Array for oscilloscope
+const dataArray = new Float32Array(bufferLength);
 
 const canvas = ref(null);
 let canvasCtx = null;
@@ -28,7 +28,7 @@ let isPlaying = ref(false);
 
 emitter.on("playNote", () => {
   isPlaying.value = true;
-  visualize(); // Call visualize on playNote event
+  visualize();
 });
 
 emitter.on("releaseNote", () => {
@@ -38,7 +38,7 @@ emitter.on("releaseNote", () => {
 onMounted(() => {
   canvas.value.width = WIDTH;
   canvas.value.height = HEIGHT;
-  canvasCtx = canvas.value.getContext("2d"); // Assign after mounted
+  canvasCtx = canvas.value.getContext("2d");
 });
 
 watch(isPlaying, (value) => {
@@ -61,8 +61,6 @@ function draw() {
 
   canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
-  // Oscilloscope-like visualization using timeDomainData
-  // pink
   canvasCtx.strokeStyle = "rgb(255,62,224)";
   canvasCtx.lineWidth = 3;
   canvasCtx.beginPath();
@@ -71,7 +69,7 @@ function draw() {
   let x = 0;
 
   for (let i = 0; i < bufferLength; i++) {
-    const v = dataArray[i] * HEIGHT / 2; // Scale and center the value
+    const v = dataArray[i] * HEIGHT / 2;
     const y = HEIGHT / 2 + v;
 
     if (i === 0) {
@@ -85,7 +83,6 @@ function draw() {
 
   canvasCtx.stroke();
 
-  // Schedule the next animation frame only if playing
   if (isPlaying) {
     drawVisual = requestAnimationFrame(draw);
   }
