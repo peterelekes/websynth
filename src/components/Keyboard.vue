@@ -31,9 +31,11 @@ function handleMIDIMessage(event) {
   const key = note;
 
   if (status === 144 && velocity > 0) { // Note on message
-    handleKeyDown({key: key});
+    emitter.emit('playNote', key);
+    pressedKeys.value.push(key);
   } else if (status === 128 || (status === 144 && velocity === 0)) { // Note off message
-    handleKeyUp({key: key});
+    emitter.emit('releaseNote', key);
+    pressedKeys.value = pressedKeys.value.filter((k) => k !== key);
   }
 }
 
